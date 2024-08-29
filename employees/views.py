@@ -3,9 +3,31 @@ from rest_framework.decorators import api_view
 from rest_framework import *
 from .models import Employee
 from .serializers import EmployeeSerializer
+from rest_framework import generics, permissions
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+#authentications
+
+from django.contrib.auth.models import User
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register(request):
+    username = request.data['username']
+    password = request.data['password']
+    user = User.objects.create_user(username=username, password=password)
+    return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+
+#CRUD operations
 
 @api_view(['GET'])
 def getAllEmployees(request):
+    permission_classes = [permissions.IsAuthenticated]
     queryset= Employee.objects.all()
     serializers = EmployeeSerializer(queryset,many=True)
     return Response({
@@ -15,6 +37,7 @@ def getAllEmployees(request):
 
 @api_view(['POST'])
 def createEmployee(request):
+    permission_classes = [permissions.IsAuthenticated]
     serializers = EmployeeSerializer(data=request.data)
     if serializers.is_valid():
         serializers.save()
@@ -23,6 +46,7 @@ def createEmployee(request):
 
 @api_view(['PUT'])
 def updateEmployee(request,pk):
+    permission_classes = [permissions.IsAuthenticated]
     try:
         presentEmployee= Employee.objects.get(pk=pk)
         serializers = EmployeeSerializer(presentEmployee,data=request.data)
@@ -34,6 +58,7 @@ def updateEmployee(request,pk):
 
 @api_view(['DELETE'])
 def deleteEmployee(request,pk):
+    permission_classes = [permissions.IsAuthenticated]
     try:
         presentEmployee= Employee.objects.get(pk=pk)
         presentEmployee.delete()
