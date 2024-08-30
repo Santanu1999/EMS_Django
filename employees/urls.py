@@ -20,16 +20,16 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('getAllEmployees/', getAllEmployees,name="getAllEmployees"),
-    path('createEmployee/', createEmployee,name="createEmployee"),
-    path('updateEmployee/<int:pk>', updateEmployee,name="updateEmployee"),
-    path('deleteEmployee/<int:pk>', deleteEmployee,name="deleteEmployee"),
+    path('v1/getAllEmployees/', getAllEmployees,name="getAllEmployees"),
+    path('v1/createEmployee/', createEmployee,name="createEmployee"),
+    path('v1/updateEmployee/<int:pk>', updateEmployee,name="updateEmployee"),
+    path('v1/deleteEmployee/<int:pk>', deleteEmployee,name="deleteEmployee"),
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
-    path('register/', register, name='register'),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('new/register/', register, name='register'),
+    path('v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
